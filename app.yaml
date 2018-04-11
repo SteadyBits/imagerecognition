@@ -1,0 +1,15 @@
+entrypoint: python manage.py runserver
+runtime: python
+env: flex
+
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /dashboard
+  static_dir: static/
+- url: .*
+  script: python manage.py runserver
+
+runtime_config:
+    python_version: 3

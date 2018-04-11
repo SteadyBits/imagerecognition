@@ -1,0 +1,8 @@
+gunicorn==19.3.0
+Django==1.11.12
+image==1.5.20
+Pillow==5.1.0
+pytz==2018.3
+matplotlib==2.2.2
+http://download.pytorch.org/whl/cu75/torch-0.1.12.post2-cp27-none-linux_x86_64.whl ; sys_platform == "linux2"
+torchvision
