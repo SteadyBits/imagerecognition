@@ -103,12 +103,11 @@
                                       processData: false,
                                       contentType: false,
                                       success:function(response){
-                                          if(response.object_class == 0) {
+                                          if(response.object_class == 1) {
                                               alert("Hmm, this does not look like Daniel")
-                                          } else {
+                                          } else if(response.object_class == 2) {
                                               alert("Yes, this looks very much like Daniel")
                                           }
-
                                       }
                                   });
                               }
@@ -116,7 +115,7 @@
                     </script>
                     </div>
                         {% if imgclass %}
-                            
+
                             {% if imgclass == 1 %}
                                 <script>
                                     alert("Hmm, this does not look like Daniel")
@@ -128,5 +127,5 @@
                             {% endif %}
                         {% endif %}
                 </section>
-            </aside><!-- /.right-side -->
+            </aside>
 {% endblock %}

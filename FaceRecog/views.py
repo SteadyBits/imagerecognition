@@ -17,7 +17,6 @@ def predict(test_dataloader):
     net.load_state_dict(IBM.torch.load(settings.STATIC_ROOT + '/image_model.pkl'))
     output1, output2 = net(IBM.Variable(x0).cpu(), IBM.Variable(x1).cpu())
     euclidean_distance = IBM.F.pairwise_distance(output1, output2)
-    print(euclidean_distance.cpu().data.numpy()[0][0])
     if (euclidean_distance.cpu().data.numpy()[0][0]) > 0.5:
         return 1
     else:
@@ -27,11 +26,9 @@ def predict(test_dataloader):
 def file_upload(request):
     if request.method == 'POST':
         f = (request.FILES.get('image'))
-        print(f)
         if f is None:
             import re
             imgstr = request.POST.get('image')
-            print(imgstr)
             imgstr = re.search(r'base64,(.*)', imgstr).group(1)
             output = open(settings.STATIC_ROOT + '/test_dir/faces/test.png', 'wb+')
             imgstr = base64.b64decode(imgstr)
@@ -53,7 +50,6 @@ def file_upload(request):
         test_dataloader = IBM.DataLoader(siamese_dataset, num_workers=6, batch_size=1, shuffle=False)
 
         status = predict(test_dataloader)
-        print(status)
         templat = 'base.html'
     return render(request, 'dashboard.html', {'templat': templat, 'imgclass': status} )
 
@@ -61,11 +57,9 @@ def file_upload(request):
 def file_upload_api(request):
     if request.method == 'POST':
         f = (request.FILES.get('image'))
-        print(f)
         if f is None:
             import re
             imgstr = request.POST.get('image')
-            print(imgstr)
             imgstr = re.search(r'base64,(.*)', imgstr).group(1)
             output = open(settings.STATIC_ROOT + '/test_dir/faces/test.png', 'wb+')
             imgstr = base64.b64decode(imgstr)
