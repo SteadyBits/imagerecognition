@@ -1,7 +1,6 @@
 {% extends templat %}
 {% load i18n %}
 
-{#{% load css_filter %}#}
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
@@ -11,115 +10,51 @@
                 <section class="content-header">
                     <h1>
                         Dashboard
-                        <small>Control panel</small>
                     </h1>
                     <ol class="breadcrumb">
-                        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li class="active">Dashboard</li>
+                        <li class="active">By Daniel Omeiza</li>
                     </ol>
                 </section>
-
                 <!-- Main content -->
                 <section class="content">
-
-                    <!-- Small boxes (Stat box) -->
-                    <div class="row">
-                        <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-yellow">
-                                <div class="inner">
-                                    <h3>
-                                        {{ successful }}
-                                    </h3>
-                                    <p>
-                                        Successful Transactions
-                                    </p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-stats-bars"></i>
-                                </div>
-                                <a href="/list_transaction/success" class="small-box-footer">
-                                    More info <i class="fa fa-arrow-circle-right"></i>
-                                </a>
-                            </div>
-                        </div><!-- ./col -->
-
-                        <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-green">
-                                <div class="inner">
-                                    <h3>
-                                        {{ approved }}
-                                    </h3>
-                                    <p>
-                                        Approved Payments
-                                    </p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-pie-graph"></i>
-                                </div>
-                                <a href="/list_transaction/approved" class="small-box-footer">
-                                    More info <i class="fa fa-arrow-circle-right"></i>
-                                </a>
-                            </div>
-                        </div><!-- ./col -->
-
-                        <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-aqua">
-                                <div class="inner">
-                                    <h3>
-                                        {{ count }}
-                                    </h3>
-                                    <p>
-                                        Awaiting Approval
-                                    </p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-stats-bars"></i>
-                                </div>
-                                <a href="/list_transaction/unapproved" class="small-box-footer">
-                                    More info <i class="fa fa-arrow-circle-right"></i>
-                                </a>
-                            </div>
-                        </div><!-- ./col -->
-
-                        <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-red">
-                                <div class="inner">
-                                    <h3>
-                                        {{failed}}
-                                    </h3>
-                                    <p>
-                                        Failed Transactions
-                                    </p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-pie-graph"></i>
-                                </div>
-                                <a href="/list_transaction/failure" class="small-box-footer">
-                                    More info <i class="fa fa-arrow-circle-right"></i>
-                                </a>
-                            </div>
-                        </div><!-- ./col -->
-                    </div><!-- /.row -->
-
                     <!-- top row -->
+                <h3 style="padding-left: 50px">This app is able to tell if the image uploaded is human face or not</h3>
+                    <br/>
                     <div class="row">
-                        <div class="col-xs-12 connectedSortable">
+
+                        <div class="col-lg-6 col-xs-6">
+                            <h4>Use this panel if you want to use the camera for a photo</h4>
                             <video id="video" width="240" height="180" autoplay></video>
                             <canvas id="canvas" width="240" height="180"></canvas>
                             <div>
-                              <input onclick="takePhoto()" id="take" type="button" value="Add Photo" />
-                              <input id="snap" type="button" value="Take photo" />
-                                <input id="upload" onclick="upload()" type="button" value="Upload Photo" />
+                              <input onclick="takePhoto()" class="btn btn-primary" id="take" type="button" value="Start Camera" />
+                              <input id="snap" class="btn btn-primary" type="button" value="Take photo" />
+                                <input id="upload" class="btn btn-primary" onclick="upload()" type="button" value="Upload Photo" />
                             </div>
+
                         </div>
 
+
+                        <div class="col-lg-3 col-xs-6" style="border-left: 6px;  border-left-style: groove; height: 250px;">
+                        <h4>Use this panel if you have an image to upload</h4>
+                        <form method="post" id="imgpost" action="/image/class/" enctype="multipart/form-data">
+                            {% csrf_token %}
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <input type="file" name="image" required/>
+                                             <input type="hidden" for="image_data" id="image_data" name="image_data" />
+                                        </div>
+
+                                    </div><!-- /.box-body -->
+
+                                    <div class="box-footer">
+                                        <button type="submit" class="btn btn-primary">Upload</button>
+                                    </div>
+                        </form>
+
                     </div>
-                    {%csrf_token%}
-                    <script>
+                         <script>
+
                       $("#video").hide();
                       $("#canvas").hide();
                       var localstream;
@@ -144,28 +79,54 @@
                         });
                       }
 
+                      function addImage()
+                        {
+                            console.log("In add image");
+                            var image_data = canvas.toDataURL();
+                            console.log("Image data:", image_data);
+                            $('#image').val(image_data);
+                            $('#imgpost').submit()
+
+                        }
+
                       function upload() {
 
                           formdata = new FormData();
-
                               var file = canvas.toDataURL();
                               if (formdata) {
-                                  alert("hey");
+
                                   formdata.append("image", file);
                                   jQuery.ajax({
-                                      url: "/image/class/",
+                                      url: "/image/class/api/",
                                       type: "POST",
                                       data: formdata,
                                       processData: false,
                                       contentType: false,
-                                      success:function(){}
+                                      success:function(response){
+                                          if(response.object_class == 0) {
+                                              alert("Hmm, this does not look like Daniel")
+                                          } else {
+                                              alert("Yes, this looks very much like Daniel")
+                                          }
+
+                                      }
                                   });
                               }
                       }
                     </script>
+                    </div>
+                        {% if imgclass %}
+                            
+                            {% if imgclass == 1 %}
+                                <script>
+                                    alert("Hmm, this does not look like Daniel")
+                                </script>
+                            {% elif imgclass == 2 %}
+                                <script>
+                                    alert("Yes, this looks very much like Daniel")
+                                </script>
+                            {% endif %}
+                        {% endif %}
                 </section>
-
-
             </aside><!-- /.right-side -->
 {% endblock %}
-

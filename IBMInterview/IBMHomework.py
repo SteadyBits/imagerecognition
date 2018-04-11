@@ -1,9 +1,4 @@
 
-# coding: utf-8
-
-# In[52]:
-import os
-
 import PIL
 
 import numpy as np
@@ -21,13 +16,10 @@ import torchvision.datasets as dset
 from collections import namedtuple
 import random
 from PIL import Image
-
+from IBMInterview import settings
 
 Config = namedtuple('Config',
-                  ['train_number_epochs', 'testing_dir'])(100,  os.path.join(os.path.dirname(os.path.dirname(__file__)) + '/images/'))
-
-
-# In[30]:
+                  ['train_number_epochs', 'test_dir'])(100,  settings.STATIC_ROOT + '/test_dir/')
 
 class SiameseNetwork(nn.Module):
     def __init__(self):
@@ -71,9 +63,6 @@ class SiameseNetwork(nn.Module):
         output1 = self.forward_once(input1)
         output2 = self.forward_once(input2)
         return output1, output2
-
-
-# In[31]:
 
 class SiameseNetworkDataset(Dataset):
     
@@ -133,8 +122,6 @@ class ContrastiveLoss(torch.nn.Module):
         return loss_contrastive
 
 
-# In[33]:
-
 net = SiameseNetwork().cpu()
 criterion = ContrastiveLoss()
 optimizer = optim.Adam(net.parameters(),lr = 0.0005 )
@@ -142,9 +129,6 @@ optimizer = optim.Adam(net.parameters(),lr = 0.0005 )
 counter = []
 loss_history = [] 
 iteration_number= 0
-
-
-# In[56]:
 
 def train_model(train_dataloader):
     for epoch in range(0,Config.train_number_epochs):
@@ -162,7 +146,3 @@ def train_model(train_dataloader):
                 iteration_number +=10
                 counter.append(iteration_number)
                 loss_history.append(loss_contrastive.data[0])
-    #show_plot(counter,loss_history)
-
-
-# In[40]:
